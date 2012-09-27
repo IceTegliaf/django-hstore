@@ -60,15 +60,15 @@ class DatabaseCreation(DatabaseCreation):
         
         if hasattr(self.connection, "pg_version"):
             if self.connection.pg_version >=90100:
-                self.connection.connection.set_isolation_level(0)
                 cursor.execute("CREATE EXTENSION hstore;")
-#                cursor.set_isolation_level(n)
-#                self.connection.commit()
+                self.connection.commit_unless_managed()
                 return
-#        if self.connection._version[0:2] >= (9, 1):
-#            cursor.execute("create extension hstore;")
-#            self.connection.commit_unless_managed()
-#            return
+
+        if self.connection._version[0:2] >= (9, 1):
+            cursor.execute("create extension hstore;")
+            self.connection.commit_unless_managed()
+            return
+        
         import glob
         import os
         # Quick Hack to run HSTORE sql script for test runs
