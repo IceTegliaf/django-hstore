@@ -56,7 +56,7 @@ The library provides three principal classes:
 ``django_hstore.hstore.HStoreManager``
     An ORM manager which provides much of the query functionality of the
     library.
-``django_hstore.hstore.HStoreGeoManager``
+``django_hstore.gis.HStoreGeoManager``
     An additional ORM manager to provide Geodjango functionality as well.
 
 
@@ -64,12 +64,13 @@ Model definition is straightforward::
 
     from django.db import models
     from django_hstore import hstore
+    from django_hstore.gis import HStoreGeoManager
 
     class Something(models.Model):
         name = models.CharField(max_length=32)
         data = hstore.DictionaryField()
         objects = hstore.HStoreManager()
-        # or objects = hstore.HStoreGeoManager()
+        # or objects = HStoreGeoManager()
 
         def __unicode__(self):
             return self.name
