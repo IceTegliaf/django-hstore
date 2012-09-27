@@ -16,7 +16,7 @@ setup(
     author='Mikko Hellsing',
     author_email='mikko@aino.se',
     license='BSD',
-    url='https://github.com/aino/django-hstore',
+    url='https://github.com/IceTegliaf/django-hstore',
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,
     classifiers=[

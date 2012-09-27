@@ -56,18 +56,28 @@ class DatabaseCreation(DatabaseCreation):
         if cursor.fetchone():
             # skip if already exists
             return
-        if self.connection._version[0:2] >= (9, 1):
-            cursor.execute("create extension hstore;")
-            self.connection.commit_unless_managed()
-            return
+        
+        
+        if hasattr(self.connection, "pg_version"):
+            if self.connection.pg_version >=90100:
+                self.connection.connection.set_isolation_level(0)
+                cursor.execute("CREATE EXTENSION hstore;")
+#                cursor.set_isolation_level(n)
+#                self.connection.commit()
+                return
+#        if self.connection._version[0:2] >= (9, 1):
+#            cursor.execute("create extension hstore;")
+#            self.connection.commit_unless_managed()
+#            return
         import glob
         import os
         # Quick Hack to run HSTORE sql script for test runs
         sql = getattr(settings, 'HSTORE_SQL', None)
         if not sql:
             # Attempt to helpfully locate contrib SQL on typical installs
-            for loc in (
+            for loc in (                        
                 # Ubuntu/Debian Location
+                '/usr/share/postgresql/*/extension/hstore--1.0.sql',
                 '/usr/share/postgresql/*/contrib/hstore.sql',
                 # Redhat/RPM location
                 '/usr/share/pgsql/contrib/hstore.sql',

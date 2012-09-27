@@ -1,17 +1,16 @@
 from django import VERSION
 from django.db import transaction
 from django.db.models.query import QuerySet
-from django.contrib.gis.db.models.query import GeoQuerySet
 from django.db.models.sql.constants import SINGLE
 from django.db.models.sql.datastructures import EmptyResultSet
 from django.db.models.sql.query import Query
-from django.contrib.gis.db.models.sql.query import GeoQuery
 from django.db.models.sql.subqueries import UpdateQuery
 from django.db.models.sql.where import EmptyShortCircuit, WhereNode
 try:
     from django.db.models.sql.where import QueryWrapper  # django <= 1.3
 except ImportError:
     from django.db.models.query_utils import QueryWrapper  # django >= 1.4
+    
 
 
 def select_query(method):
@@ -83,9 +82,6 @@ class HStoreQuery(Query):
         super(HStoreQuery, self).__init__(model, HStoreWhereNode)
 
 
-class HStoreGeoQuery(GeoQuery, Query):
-    pass
-
 
 class HStoreQuerySet(QuerySet):
     def __init__(self, model=None, query=None, using=None):
@@ -145,7 +141,3 @@ class HStoreQuerySet(QuerySet):
         return query
 
 
-class HStoreGeoQuerySet(HStoreQuerySet, GeoQuerySet):
-    def __init__(self, model=None, query=None, using=None):
-        query = query or HStoreGeoQuery(model)
-        super(HStoreGeoQuerySet, self).__init__(model=model, query=query, using=using)
